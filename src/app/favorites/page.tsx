@@ -1,0 +1,3 @@
+import Link from "next/link";
+import { Bookmark } from "lucide-react";
+export default function FavoritesPage(){return <div className="container py-24 text-center"><div className="mx-auto grid h-16 w-16 place-items-center rounded-2xl bg-[#f0e8dc] text-[var(--accent)]"><Bookmark size={27}/></div><h1 className="mt-6 text-4xl font-semibold tracking-tight">Your saved ideas</h1><p className="mx-auto mt-3 max-w-md text-sm leading-6 text-[var(--muted)]">Your favorite finds will live here. Create an account to keep your inspiration in sync across devices.</p><Link href="/signup" className="btn-primary mt-7 inline-block">Create an account</Link></div>}
