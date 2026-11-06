@@ -1,0 +1,5 @@
+import { notFound } from "next/navigation";
+import { demoPhotos, categories } from "@/lib/demo-data";
+import { PhotoGrid } from "@/components/photo-grid";
+import { CategoryTabs } from "@/components/category-tabs";
+export default async function CategoryPage({params}:{params:Promise<{slug:string}>}){const {slug}=await params;const category=categories.find(c=>c.toLowerCase()===decodeURIComponent(slug).toLowerCase());if(!category||category==="All")notFound();const photos=demoPhotos.filter(p=>p.category?.toLowerCase()===category.toLowerCase());return <div className="container pt-12"><p className="eyebrow mb-3">Explore a little deeper</p><h1 className="text-5xl font-semibold tracking-[-.06em]">{category}</h1><p className="my-4 text-[var(--muted)]">A collection of {category.toLowerCase()} ideas to save for later.</p><div className="my-7"><CategoryTabs active={category}/></div><PhotoGrid photos={photos}/></div>}
