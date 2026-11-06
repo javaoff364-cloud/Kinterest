@@ -1,0 +1,6 @@
+"use client";
+import Link from "next/link";
+import { useSavedPhotos } from "@/hooks/use-saved-photos";
+import { PhotoGrid } from "@/components/photo-grid";
+import { Bookmark } from "lucide-react";
+export function FavoritesContent(){const {savedPhotos}=useSavedPhotos();return <div className="container pt-16"><p className="eyebrow mb-3">Keep the good stuff close</p><h1 className="text-5xl font-semibold tracking-[-.06em]">Saved ideas</h1><p className="mb-8 mt-3 text-[var(--muted)]">Your little collection of things that caught your eye.</p>{savedPhotos.length?<PhotoGrid photos={savedPhotos}/>:<div className="py-20 text-center"><div className="mx-auto grid h-16 w-16 place-items-center rounded-2xl bg-[#f0e8dc] text-[var(--accent)]"><Bookmark size={27}/></div><h2 className="mt-6 text-2xl font-semibold">Nothing saved just yet</h2><p className="mx-auto mt-3 max-w-md text-sm text-[var(--muted)]">Tap the heart on any image to keep it here for later.</p><Link href="/explore" className="btn-primary mt-7 inline-block">Explore ideas</Link></div>}</div>}
