@@ -36,7 +36,7 @@ export async function signUp(formData: FormData) {
     redirect("/signup?error=" + encodeURIComponent("Parol kamida 8 ta belgidan iborat bo‘lsin."));
   }
   const { error } = await auth.signUp.email({ email, password, name });
-  if (error) redirect("/signup?error=" + encodeURIComponent(authMessage(error.message)));
+  if (error) redirect("/signup?error=" + encodeURIComponent(authMessage(error.message || "Registration failed.")));
   redirect("/");
 }
 
