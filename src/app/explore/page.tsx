@@ -1,0 +1,4 @@
+import { demoPhotos } from "@/lib/demo-data";
+import { PhotoGrid } from "@/components/photo-grid";
+import { CategoryTabs } from "@/components/category-tabs";
+export default function ExplorePage(){return <div className="container pt-12"><p className="eyebrow mb-3">A world of ideas</p><h1 className="text-5xl font-semibold tracking-[-.06em]">Explore</h1><p className="mt-3 max-w-xl text-[var(--muted)]">Wander through ideas, places, colors and details collected from around the web.</p><div className="my-8"><CategoryTabs/></div><PhotoGrid photos={[...demoPhotos,...demoPhotos.map(p=>({...p,id:p.id+"-more"}))]}/></div>}
