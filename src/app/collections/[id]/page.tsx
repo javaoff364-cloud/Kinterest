@@ -1,0 +1,5 @@
+import Image from "next/image";
+import { notFound } from "next/navigation";
+import { collections, demoPhotos } from "@/lib/demo-data";
+import { PhotoGrid } from "@/components/photo-grid";
+export default async function CollectionPage({params}:{params:Promise<{id:string}>}){const {id}=await params;const collection=collections.find(c=>c.id===id);if(!collection)notFound();return <div className="container pt-12"><div className="relative mb-8 h-64 overflow-hidden rounded-3xl"><Image src={collection.cover} alt={collection.title} fill unoptimized className="object-cover"/><div className="absolute inset-0 bg-black/25"/><div className="absolute bottom-7 left-7 text-white"><p className="text-xs uppercase tracking-[.2em]">Curated collection</p><h1 className="mt-2 text-4xl font-semibold tracking-tight">{collection.title}</h1></div></div><p className="mb-8 text-[var(--muted)]">{collection.description}</p><PhotoGrid photos={demoPhotos.slice(0,8)}/></div>}
