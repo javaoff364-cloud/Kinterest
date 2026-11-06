@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Search, Menu, X, Bookmark, LogOut } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { authClient } from "@/lib/auth/client";
 import { BrandMark } from "@/components/brand-mark";
 
@@ -11,6 +11,7 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState<string | null>(null);
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     let alive = true;
@@ -20,10 +21,11 @@ export function SiteHeader() {
       if (alive) setEmail(null);
     });
     return () => { alive = false; };
-  }, []);
+  }, [pathname]);
 
   async function handleSignOut() {
     await authClient.signOut();
+    window.dispatchEvent(new Event("kinterest:auth-change"));
     setEmail(null);
     setOpen(false);
     router.refresh();
