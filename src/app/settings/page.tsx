@@ -1,1 +1,10 @@
-export default function SettingsPage(){return <div className="container max-w-3xl py-16"><p className="eyebrow mb-3">Make it yours</p><h1 className="text-5xl font-semibold tracking-[-.06em]">Settings</h1><div className="mt-8 divide-y divide-[var(--line)] rounded-2xl border border-[var(--line)] bg-white px-6"><div className="py-5"><h2 className="font-semibold">Account</h2><p className="mt-1 text-sm text-[var(--muted)]">Sign in or create an account to manage your profile.</p></div><div className="py-5"><h2 className="font-semibold">Appearance</h2><p className="mt-1 text-sm text-[var(--muted)]">Kinterest currently uses a warm light theme.</p></div><div className="py-5"><h2 className="font-semibold">Privacy</h2><p className="mt-1 text-sm text-[var(--muted)]">Your saved collections are private by default once you connect an account.</p></div></div></div>}
+import { SettingsClient } from "@/components/settings-client";
+
+export default function SettingsPage() {
+  return <div className="container max-w-4xl py-10 sm:py-16">
+    <p className="eyebrow mb-3">Make it yours</p>
+    <h1 className="text-4xl font-semibold tracking-[-.06em] sm:text-5xl">Settings</h1>
+    <p className="mt-3 max-w-xl text-sm leading-6 text-[var(--muted)] sm:text-base">Manage your profile, personalise your space, and keep your inspiration organised.</p>
+    <div className="mt-8"><SettingsClient/></div>
+  </div>;
+}
