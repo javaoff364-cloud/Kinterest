@@ -35,7 +35,10 @@ export function SavedPhotosProvider({ children }: { children: React.ReactNode })
 
   useEffect(() => {
     void load();
-  }, [load]);
+    const refresh = () => { void load(); };
+    window.addEventListener("kinterest:auth-change", refresh);
+    return () => window.removeEventListener("kinterest:auth-change", refresh);
+  }, [load, pathname]);
 
   const toggle = useCallback(async (photo: Photo) => {
     const exists = savedPhotos.some((item) => keyOf(item) === keyOf(photo));
