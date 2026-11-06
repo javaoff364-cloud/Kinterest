@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Camera, Check, Moon, Sun, UserRound, Upload, X } from "lucide-react";
+import { Camera, Check, Moon, Sun, UserRound, X } from "lucide-react";
 import { authClient } from "@/lib/auth/client";
 import { BrandMark } from "@/components/brand-mark";
 
