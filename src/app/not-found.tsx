@@ -1,0 +1,2 @@
+import Link from "next/link";
+export default function NotFound(){return <div className="container py-28 text-center"><p className="eyebrow">404 · Lost in the scroll</p><h1 className="mt-4 text-6xl font-semibold tracking-[-.06em]">Nothing here.</h1><p className="mt-4 text-[var(--muted)]">This page may have moved, or the link might be a little off.</p><Link href="/" className="btn-primary mt-8 inline-block">Back to home</Link></div>}
