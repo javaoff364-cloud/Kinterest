@@ -11,7 +11,7 @@ export async function searchPhotos({query="",page=1,perPage=24,category=""}:Sear
  if(!tasks.length){
   if(page>1)return {photos:[],total:demoPhotos.length,source:"demo"};
   const matches=demoPhotos.filter(p=>!query&&!category||[p.alt,p.category,p.photographer].join(" ").toLowerCase().includes(q.toLowerCase()));
-  return {photos:matches.length?matches:demoPhotos,total:matches.length||demoPhotos.length,source:"demo"};
+  return {photos:matches,total:matches.length,source:"demo"};
  }
  const results=await Promise.allSettled(tasks);
  const photos=results.flatMap(r=>r.status==="fulfilled"?r.value:[]);
