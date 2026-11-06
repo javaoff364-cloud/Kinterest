@@ -9,6 +9,10 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: postgresql://kinterest:ci-build-only@127.0.0.1:5432/kinterest
+      NEON_AUTH_BASE_URL: https://neon-auth-build.invalid/kinterest/auth
+      NEON_AUTH_COOKIE_SECRET: kinterest-ci-build-only-secret-not-used-at-runtime-2026
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
