@@ -35,7 +35,6 @@ export function SiteHeader() {
   }
 
   const avatar = user?.image;
-  const initials = (user?.name || user?.email || "K").slice(0, 1).toUpperCase();
   const avatarNode = avatar
     ? <img src={avatar} alt="" className="h-9 w-9 rounded-full border border-[var(--line)] object-cover"/>
     : <span className="grid h-9 w-9 place-items-center rounded-full bg-[var(--soft)]"><BrandMark className="h-7 w-7"/></span>;
@@ -59,9 +58,9 @@ export function SiteHeader() {
         <Link href="/favorites" aria-label="Saved ideas" className="rounded-full p-2 text-[var(--muted)] hover:text-[var(--accent)]"><Bookmark size={20}/></Link>
         {user ? <><Link href="/settings" aria-label="Account settings" className="flex items-center gap-2 rounded-full p-1 pr-2 hover:bg-[var(--soft)]">{avatarNode}<span className="hidden max-w-28 truncate text-sm font-semibold xl:block">{user.name || user.email}</span></Link><button type="button" onClick={() => void handleSignOut()} className="rounded-full p-2 text-[var(--muted)] hover:text-[var(--accent)]" aria-label="Sign out"><LogOut size={18}/></button></> : <><Link href="/login" className="text-sm font-semibold">Log in</Link><Link href="/signup" className="btn-primary">Get started</Link></>}
       </div>
-      <button onClick={() => setOpen(!open)} className="flex items-center gap-2 rounded-full p-2 md:hidden" aria-label="Toggle menu">{user && avatarNode}{open ? <X/> : <Menu/>}</button>
+      <button onClick={() => setOpen(!open)} className="flex items-center gap-2 rounded-full p-2 lg:hidden" aria-label="Toggle menu">{user && avatarNode}{open ? <X/> : <Menu/>}</button>
     </div>
-    {open && <div className="container grid gap-4 border-t border-[var(--line)] pb-5 pt-4 md:hidden">
+    {open && <div className="container grid gap-4 border-t border-[var(--line)] pb-5 pt-4 lg:hidden">
       <form action="/search" className="flex rounded-full bg-[var(--soft)] px-4 py-3"><Search size={17} className="mr-2"/><input name="q" placeholder="Search inspiration..." className="w-full bg-transparent outline-none"/></form>
       <Link href="/" onClick={() => setOpen(false)} className="flex items-center gap-3"><Home size={18}/> Home</Link>
       <Link href="/explore" onClick={() => setOpen(false)} className="flex items-center gap-3"><Compass size={18}/> Explore</Link>
