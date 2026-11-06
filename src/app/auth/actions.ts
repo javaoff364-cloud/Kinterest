@@ -21,7 +21,7 @@ export async function signIn(formData: FormData) {
   const email = String(formData.get("email") || "").trim().toLowerCase();
   const password = String(formData.get("password") || "");
   const { error } = await auth.signIn.email({ email, password });
-  if (error) redirect("/login?error=" + encodeURIComponent(authMessage(error.message)));
+  if (error) redirect("/login?error=" + encodeURIComponent(authMessage(error.message || "Authentication failed.")));
   redirect("/");
 }
 
