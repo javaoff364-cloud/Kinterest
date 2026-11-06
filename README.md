@@ -6,7 +6,8 @@ A warm, modern visual discovery platform for exploring, saving, and organizing i
 
 - Next.js App Router + TypeScript
 - Tailwind CSS
-- Supabase (optional auth, database, and persistence)
+- Neon PostgreSQL for application data
+- Neon Auth (Managed Better Auth) for accounts and sessions
 - Unsplash, Pexels, and Pixabay provider adapters
 - Vercel deployment
 
@@ -18,6 +19,14 @@ cp .env.example .env.local
 npm run dev
 ```
 
-The app runs in demo mode without API keys, using curated sample photography. Add provider API keys to enable live image search. Configure Supabase to enable accounts and cloud-synced collections.
+Set `DATABASE_URL`, `NEON_AUTH_BASE_URL`, and `NEON_AUTH_COOKIE_SECRET` in `.env.local`. The Neon database schema is in `database/schema.sql`.
 
-See `.env.example` for configuration.
+The app runs in demo mode without image-provider API keys, using curated sample photography. Add provider API keys to enable live image search.
+
+## Authentication
+
+Neon Auth handles sign-up, sign-in, and sessions. Email verification is disabled for this project. Passwords and sessions from the previous Supabase Auth project are not transferred; existing users need to create a new Kinterest account.
+
+## Data access
+
+Database access is server-side only. Protected API routes verify the Neon Auth session before reading or changing saved photos. Never expose `DATABASE_URL` or `NEON_AUTH_COOKIE_SECRET` to browser code.
