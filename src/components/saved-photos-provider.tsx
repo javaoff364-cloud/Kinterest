@@ -4,13 +4,12 @@ import { usePathname, useRouter } from "next/navigation";
 import type { Photo } from "@/lib/types";
 import { createClient } from "@/lib/supabase/client";
 
-type SavedContextValue = { saved: string[]; isSaved: (photo: Photo) => boolean; toggle: (photo: Photo) => Promise<void> };
+type SavedContextValue = { saved: string[]; savedPhotos: Photo[]; isSaved: (photo: Photo) => boolean; toggle: (photo: Photo) => Promise<void> };
 const SavedContext = createContext<SavedContextValue | null>(null);
 const keyOf = (photo: Pick<Photo, "provider" | "id">) => `${photo.provider}:${photo.id}`;
 
 export function SavedPhotosProvider({ children }: { children: React.ReactNode }) {
-  const [saved, setSaved] = useState<string[]>([]);
-  const [userId, setUserId] = useState<string | null>(null);
+  const [savedPhotos, setSavedPhotos] = useState<Photo[]>([]);
   const router = useRouter();
   const pathname = usePathname();
 
@@ -18,10 +17,14 @@ export function SavedPhotosProvider({ children }: { children: React.ReactNode })
     const supabase = createClient();
     if (!supabase) return;
     const { data: { user } } = await supabase.auth.getUser();
-    setUserId(user?.id ?? null);
-    if (!user) { setSaved([]); return; }
-    const { data, error } = await supabase.from("saved_photos").select("provider,provider_photo_id");
-    if (!error) setSaved((data ?? []).map((row) => `${row.provider}:${row.provider_photo_id}`));
+    if (!user) { setSavedPhotos([]); return; }
+    const { data, error } = await supabase.from("saved_photos").select("provider,provider_photo_id,image_url,thumb_url,alt,photographer,source_url");
+    if (!error) setSavedPhotos((data ?? []).map((row) => ({
+      id: row.provider_photo_id, provider: row.provider as Photo["provider"],
+      imageUrl: row.image_url, thumbUrl: row.thumb_url, alt: row.alt,
+      photographer: row.photographer, sourceUrl: row.source_url,
+      width: 900, height: 1200
+    })));
   }, []);
 
   useEffect(() => {
@@ -38,10 +41,10 @@ export function SavedPhotosProvider({ children }: { children: React.ReactNode })
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) { router.push(`/login?next=${encodeURIComponent(pathname || "/")}`); return; }
     const key = keyOf(photo);
-    if (saved.includes(key)) {
+    if (savedPhotos.some((item) => keyOf(item) === key)) {
       const { error } = await supabase.from("saved_photos").delete().eq("provider", photo.provider).eq("provider_photo_id", photo.id);
       if (error) { window.alert("Could not remove this saved image. Please try again."); return; }
-      setSaved((current) => current.filter((item) => item !== key));
+      setSavedPhotos((current) => current.filter((item) => keyOf(item) !== key));
     } else {
       const { error } = await supabase.from("saved_photos").upsert({
         user_id: user.id, provider: photo.provider, provider_photo_id: photo.id,
@@ -49,11 +52,12 @@ export function SavedPhotosProvider({ children }: { children: React.ReactNode })
         alt: photo.alt, photographer: photo.photographer, source_url: photo.sourceUrl
       }, { onConflict: "user_id,provider,provider_photo_id" });
       if (error) { window.alert("Could not save this image. Please try again."); return; }
-      setSaved((current) => current.includes(key) ? current : [...current, key]);
+      setSavedPhotos((current) => current.some((item) => keyOf(item) === key) ? current : [...current, photo]);
     }
-  }, [pathname, router, saved]);
+  }, [pathname, router, savedPhotos]);
 
-  const value = useMemo(() => ({ saved, isSaved: (photo: Photo) => saved.includes(keyOf(photo)), toggle }), [saved, toggle]);
+  const saved = useMemo(() => savedPhotos.map(keyOf), [savedPhotos]);
+  const value = useMemo(() => ({ saved, savedPhotos, isSaved: (photo: Photo) => saved.includes(keyOf(photo)), toggle }), [saved, savedPhotos, toggle]);
   return <SavedContext.Provider value={value}>{children}</SavedContext.Provider>;
 }
 export function useSavedPhotosContext() {
