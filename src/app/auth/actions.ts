@@ -2,6 +2,14 @@
 
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth/server";
+import { z } from "zod";
+
+const emailSchema = z.string().trim().toLowerCase().email();
+const signUpSchema = z.object({
+  name: z.string().trim().min(1).max(80),
+  email: emailSchema,
+  password: z.string().min(8).max(128),
+});
 
 function authMessage(message: string) {
   const value = message.toLowerCase();
@@ -18,23 +26,27 @@ function authMessage(message: string) {
 }
 
 export async function signIn(formData: FormData) {
-  const email = String(formData.get("email") || "").trim().toLowerCase();
+  const emailResult = emailSchema.safeParse(String(formData.get("email") || ""));
   const password = String(formData.get("password") || "");
-  const { error } = await auth.signIn.email({ email, password });
+  if (!emailResult.success || !password) {
+    redirect("/login?error=" + encodeURIComponent("Email yoki parolni tekshiring."));
+  }
+  const { error } = await auth.signIn.email({ email: emailResult.data, password });
   if (error) redirect("/login?error=" + encodeURIComponent(authMessage(error.message || "Authentication failed.")));
   redirect("/");
 }
 
 export async function signUp(formData: FormData) {
-  const name = String(formData.get("name") || "").trim().slice(0, 80);
-  const email = String(formData.get("email") || "").trim().toLowerCase();
-  const password = String(formData.get("password") || "");
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    redirect("/signup?error=" + encodeURIComponent("Email manzilini tekshiring."));
+  const parsed = signUpSchema.safeParse({
+    name: String(formData.get("name") || ""),
+    email: String(formData.get("email") || ""),
+    password: String(formData.get("password") || ""),
+  });
+  if (!parsed.success) {
+    const message = parsed.error.issues[0]?.message || "Ro‘yxatdan o‘tish ma’lumotlarini tekshiring.";
+    redirect("/signup?error=" + encodeURIComponent(message));
   }
-  if (password.length < 8) {
-    redirect("/signup?error=" + encodeURIComponent("Parol kamida 8 ta belgidan iborat bo‘lsin."));
-  }
+  const { email, password, name } = parsed.data;
   const { error } = await auth.signUp.email({ email, password, name });
   if (error) redirect("/signup?error=" + encodeURIComponent(authMessage(error.message || "Registration failed.")));
   redirect("/");
