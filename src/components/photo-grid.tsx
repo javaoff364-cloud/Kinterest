@@ -19,7 +19,7 @@ function PhotoCard({ photo, priority }: { photo: Photo; priority: boolean }) {
       {failed ? <span className="grid min-h-40 place-items-center text-[var(--muted)]"><ImageOff size={24}/></span> :
         <Image src={photo.imageUrl} alt={photo.alt} width={photo.width} height={photo.height} sizes="(max-width:560px) 48vw, (max-width:900px) 30vw, (max-width:1400px) 20vw, 16vw" priority={priority} loading={priority ? "eager" : "lazy"} onLoad={() => setLoaded(true)} onError={() => setFailed(true)} className={`h-auto w-full transition-opacity duration-300 ${loaded ? "opacity-100" : "opacity-0"}`}/>}
     </Link>
-    <div className="absolute right-3 top-3 flex gap-2 opacity-100 transition sm:opacity-0 sm:group-hover:opacity-100"><SaveButton photo={photo}/><Link href={`/photo/${encodeURIComponent(photo.id)}`} aria-label="Open image" className="grid h-9 w-9 place-items-center rounded-full bg-white text-[#554f47] shadow"><ArrowUpRight size={17}/></Link></div>
+    <div className="absolute right-3 top-3 flex gap-2 opacity-100 transition sm:opacity-0 sm:group-hover:opacity-100"><SaveButton photo={photo}/><Link href={`/photo/${encodeURIComponent(photo.id)}`} aria-label="Open image" className="grid h-9 w-9 place-items-center rounded-full bg-[var(--card)] text-[var(--ink)] shadow"><ArrowUpRight size={17}/></Link></div>
     <Link href={`/photo/${encodeURIComponent(photo.id)}`} className="photo-overlay"><p className="line-clamp-1 text-sm font-semibold">{photo.alt}</p><p className="mt-1 text-xs opacity-80">by {photo.photographer}</p></Link>
   </article>;
 }
