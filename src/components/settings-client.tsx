@@ -21,6 +21,7 @@ export function SettingsClient() {
   const [theme, setTheme] = useState<ThemeMode>("system");
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
+  const [linkingGoogle, setLinkingGoogle] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -46,6 +47,19 @@ export function SettingsClient() {
     setTheme(value);
     window.localStorage.setItem("kinterest-theme", value);
     applyTheme(value);
+  }
+
+  async function connectGoogle() {
+    setLinkingGoogle(true);
+    setMessage("");
+    try {
+      const callbackURL = new URL("/settings", window.location.origin).toString();
+      const result = await authClient.linkSocial({ provider: "google", callbackURL });
+      if (result.error) throw new Error(result.error.message || "Could not connect Google account.");
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Could not connect Google account.");
+      setLinkingGoogle(false);
+    }
   }
 
   function chooseAvatar(file?: File) {
@@ -90,6 +104,7 @@ export function SettingsClient() {
       <div className="flex items-center gap-3"><span className="rounded-2xl bg-[var(--soft)] p-3">{theme==="dark"?<Moon size={20}/>:theme==="light"?<Sun size={20}/>:<Monitor size={20}/>}</span><div><h2 className="font-semibold">Appearance</h2><p className="text-sm text-[var(--muted)]">Choose system, light or dark mode.</p></div></div>
       <select aria-label="Color theme" value={theme} onChange={(event)=>changeTheme(event.target.value as ThemeMode)} className="rounded-full border border-[var(--line)] bg-[var(--paper)] px-4 py-2 text-sm font-semibold"><option value="system">System default</option><option value="light">Light</option><option value="dark">Dark</option></select>
     </section>
+    <section className="rounded-3xl border border-[var(--line)] bg-[var(--card)] p-5 sm:p-7"><div className="flex flex-wrap items-center justify-between gap-4"><div><h2 className="font-semibold">Connected accounts</h2><p className="mt-1 text-sm text-[var(--muted)]">Connect Google to sign in with it next time.</p></div><button type="button" onClick={() => void connectGoogle()} disabled={linkingGoogle} className="rounded-full border border-[var(--line)] bg-[var(--soft)] px-4 py-2 text-sm font-semibold disabled:opacity-60">{linkingGoogle ? "Connecting..." : "Connect Google account"}</button></div>{message && <p role="status" className="mt-3 text-sm text-[var(--muted)]">{message}</p>}</section>
     <section className="rounded-3xl border border-[var(--line)] bg-[var(--card)] p-5 sm:p-7"><h2 className="font-semibold">Privacy and account</h2><p className="mt-2 text-sm leading-6 text-[var(--muted)]">Your account details are managed securely by Neon Auth. Saved ideas and collections remain connected to your signed-in account.</p></section>
   </div>;
 }
