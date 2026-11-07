@@ -11,9 +11,12 @@ export function GoogleSignInButton() {
     setBusy(true);
     setError("");
     try {
+      const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+      const siteOrigin = isLocal ? window.location.origin : (process.env.NEXT_PUBLIC_SITE_URL || window.location.origin);
+      const callbackURL = new URL("/", siteOrigin).toString();
       const { error: authError } = await authClient.signIn.social({
         provider: "google",
-        callbackURL: window.location.origin
+        callbackURL
       });
       if (authError) throw new Error(authError.message || "Google sign-in failed.");
     } catch (e) {
