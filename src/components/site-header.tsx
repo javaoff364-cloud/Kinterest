@@ -6,6 +6,7 @@ import { Search, Menu, X, Bookmark, LogOut, Home, Compass, Settings } from "luci
 import { useRouter, usePathname } from "next/navigation";
 import { authClient } from "@/lib/auth/client";
 import { BrandMark } from "@/components/brand-mark";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 type HeaderUser = { email?: string | null; name?: string | null; image?: string | null };
 
@@ -54,6 +55,7 @@ export function SiteHeader() {
         <Search size={17} className="mr-2 shrink-0 text-[var(--muted)]"/>
         <input name="q" placeholder="Find a little inspiration..." className="w-full bg-transparent text-sm outline-none placeholder:text-[var(--muted)]"/>
       </form>
+      <ThemeToggle />
       <div className="hidden items-center gap-3 sm:flex">
         <Link href="/favorites" aria-label="Saved ideas" className="rounded-full p-2 text-[var(--muted)] hover:text-[var(--accent)]"><Bookmark size={20}/></Link>
         {user ? <><Link href="/settings" aria-label="Account settings" className="flex items-center gap-2 rounded-full p-1 pr-2 hover:bg-[var(--soft)]">{avatarNode}<span className="hidden max-w-28 truncate text-sm font-semibold xl:block">{user.name || user.email}</span></Link><button type="button" onClick={() => void handleSignOut()} className="rounded-full p-2 text-[var(--muted)] hover:text-[var(--accent)]" aria-label="Sign out"><LogOut size={18}/></button></> : <><Link href="/login" className="text-sm font-semibold">Log in</Link><Link href="/signup" className="btn-primary">Get started</Link></>}
