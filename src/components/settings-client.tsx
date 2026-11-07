@@ -5,6 +5,7 @@ import { Camera, Check, Monitor, Moon, Sun, UserRound, X } from "lucide-react";
 import { authClient } from "@/lib/auth/client";
 import { BrandMark } from "@/components/brand-mark";
 import { useTheme } from "next-themes";
+import { toast } from "sonner";
 
 type Profile = { name?: string | null; email?: string | null; image?: string | null };
 export function SettingsClient() {
@@ -48,6 +49,7 @@ export function SettingsClient() {
       } else {
         setMessage(detail);
       }
+      toast.error(detail);
       setLinkingGoogle(false);
     }
   }
@@ -70,8 +72,11 @@ export function SettingsClient() {
       setProfile((current) => ({ ...current, name: name.trim(), image }));
       window.dispatchEvent(new Event("kinterest:auth-change"));
       setMessage("Profile updated successfully.");
+      toast.success("Profile updated successfully.");
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "Could not update profile.");
+      const detail = error instanceof Error ? error.message : "Could not update profile.";
+      setMessage(detail);
+      toast.error(detail);
     } finally { setBusy(false); }
   }
 
