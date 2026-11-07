@@ -41,7 +41,7 @@ export function SiteHeader() {
     : <span className="grid h-9 w-9 place-items-center rounded-full bg-[var(--soft)]"><BrandMark className="h-7 w-7"/></span>;
 
   return <header className="sticky top-0 z-50 border-b border-[var(--line)] bg-[var(--header-bg)] backdrop-blur-xl">
-    <div className="container flex h-[68px] items-center justify-between gap-3 sm:h-[76px] sm:gap-6">
+    <div className="container flex h-[68px] items-center justify-between gap-2 sm:h-[76px] sm:gap-6">
       <Link href="/" aria-label="Kinterest home" className="flex shrink-0 items-center gap-2.5">
         <BrandMark className="h-9 w-9 sm:h-10 sm:w-10"/>
         <span className="text-[22px] font-bold tracking-[-.07em] sm:text-[25px]">kinterest<span className="text-[var(--accent)]">.</span></span>
@@ -53,17 +53,21 @@ export function SiteHeader() {
       </nav>
       <form action="/search" className="hidden min-w-0 max-w-[430px] flex-1 items-center rounded-full bg-[var(--soft)] px-4 py-3 md:flex">
         <Search size={17} className="mr-2 shrink-0 text-[var(--muted)]"/>
-        <input name="q" placeholder="Find a little inspiration..." className="w-full bg-transparent text-sm outline-none placeholder:text-[var(--muted)]"/>
+        <input name="q" placeholder="Find a little inspiration..." className="min-w-0 w-full bg-transparent text-sm outline-none placeholder:text-[var(--muted)]"/>
       </form>
       <ThemeToggle />
-      <div className="hidden items-center gap-3 sm:flex">
+      <div className="hidden shrink-0 items-center gap-3 sm:flex">
         <Link href="/favorites" aria-label="Saved ideas" className="rounded-full p-2 text-[var(--muted)] hover:text-[var(--accent)]"><Bookmark size={20}/></Link>
         {user ? <><Link href="/settings" aria-label="Account settings" className="flex items-center gap-2 rounded-full p-1 pr-2 hover:bg-[var(--soft)]">{avatarNode}<span className="hidden max-w-28 truncate text-sm font-semibold xl:block">{user.name || user.email}</span></Link><button type="button" onClick={() => void handleSignOut()} className="rounded-full p-2 text-[var(--muted)] hover:text-[var(--accent)]" aria-label="Sign out"><LogOut size={18}/></button></> : <><Link href="/login" className="text-sm font-semibold">Log in</Link><Link href="/signup" className="btn-primary">Get started</Link></>}
       </div>
-      <button onClick={() => setOpen(!open)} className="flex items-center gap-2 rounded-full p-2 lg:hidden" aria-label="Toggle menu">{user && avatarNode}{open ? <X/> : <Menu/>}</button>
+      <button onClick={() => setOpen(!open)} className="flex shrink-0 items-center gap-2 rounded-full p-2 lg:hidden" aria-label="Toggle menu" aria-expanded={open}>{user && avatarNode}{open ? <X/> : <Menu/>}</button>
     </div>
-    {open && <div className="container grid gap-4 border-t border-[var(--line)] pb-5 pt-4 lg:hidden">
-      <form action="/search" className="flex rounded-full bg-[var(--soft)] px-4 py-3"><Search size={17} className="mr-2"/><input name="q" placeholder="Search inspiration..." className="w-full bg-transparent outline-none"/></form>
+    {open && <div className="container grid min-w-0 gap-4 border-t border-[var(--line)] pb-5 pt-4 lg:hidden">
+      <form action="/search" className="flex min-w-0 w-full items-center rounded-full bg-[var(--soft)] px-4 py-3">
+        <Search size={17} className="mr-2 shrink-0 text-[var(--muted)]"/>
+        <input name="q" placeholder="Search inspiration..." className="min-w-0 flex-1 bg-transparent text-sm outline-none"/>
+        <button type="submit" className="ml-2 shrink-0 text-sm font-semibold text-[var(--accent)]">Go</button>
+      </form>
       <Link href="/" onClick={() => setOpen(false)} className="flex items-center gap-3"><Home size={18}/> Home</Link>
       <Link href="/explore" onClick={() => setOpen(false)} className="flex items-center gap-3"><Compass size={18}/> Explore</Link>
       <Link href="/collections" onClick={() => setOpen(false)} className="flex items-center gap-3"><Bookmark size={18}/> Collections</Link>
