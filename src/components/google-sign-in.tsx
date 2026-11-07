@@ -18,7 +18,13 @@ export function GoogleSignInButton() {
         provider: "google",
         callbackURL
       });
-      if (authError) throw new Error(authError.message || "Google sign-in failed.");
+      if (authError) {
+        const message = authError.message || "Google sign-in failed.";
+        if (/account_not_linked/i.test(message)) {
+          throw new Error("This Google email already has a Kinterest account. Sign in with that account's email and password, then connect Google from Settings.");
+        }
+        throw new Error(message);
+      }
     } catch (e) {
       setError(e instanceof Error ? e.message : "Google sign-in failed. Please try again.");
       setBusy(false);
