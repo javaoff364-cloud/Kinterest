@@ -34,11 +34,17 @@ export function SettingsClient() {
   }, []);
 
   async function connectGoogle() {
+    if (linkingGoogle) return;
     setLinkingGoogle(true);
     setMessage("");
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
     try {
       const callbackURL = new URL("/settings", window.location.origin).toString();
-      const result = await authClient.linkSocial({ provider: "google", callbackURL });
+      const request = authClient.linkSocial({ provider: "google", callbackURL });
+      const timeout = new Promise<never>((_, reject) => {
+        timeoutId = setTimeout(() => reject(new Error("Google connection timed out after 15 seconds. Check OAuth settings and try again.")), 15_000);
+      });
+      const result = await Promise.race([request, timeout]);
       if (result.error) throw new Error(result.error.message || "Could not connect Google account.");
     } catch (error) {
       const detail = error instanceof Error ? error.message : "Could not connect Google account.";
@@ -51,6 +57,8 @@ export function SettingsClient() {
       }
       toast.error(detail);
       setLinkingGoogle(false);
+    } finally {
+      if (timeoutId) clearTimeout(timeoutId);
     }
   }
 
